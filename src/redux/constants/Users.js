@@ -1,0 +1,3 @@
+export const SET_USERS = 'SET_USERS';
+export const LOAD_USERS_PENDING = 'LOAD_USERS_PENDING';
+export const LOAD_USERS_ERROR = 'LOAD_USERS_ERROR';
