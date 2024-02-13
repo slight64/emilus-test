@@ -10,12 +10,11 @@ UsersService.fetchUsers = function (params) {
   });
 };
 
-// UsersService.setUsers = function (data) {
-//   return fetch({
-//     url: '/posts',
-//     method: 'post',
-//     data: data,
-//   });
-// };
+UsersService.fetchUserById = function (id) {
+  return fetch({
+    url: `/users/${id}`,
+    method: 'get',
+  });
+};
 
 export default UsersService;

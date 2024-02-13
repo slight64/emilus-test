@@ -1,15 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Table, Tag, Tooltip, message, Button, Input } from 'antd';
-import { EyeOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  EyeOutlined,
+  DeleteOutlined,
+  SearchOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
 import AvatarStatus from 'components/shared-components/AvatarStatus';
 import Flex from 'components/shared-components/Flex';
-import UserView from './UserView';
 import { getUsersAction } from 'redux/actions/Users';
 import { MOCK_AVATAR } from 'assets/data/constants';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import Utils from 'utils';
+import UserView from './UserView';
 
 const UserList = () => {
+  const history = useHistory();
   const [filter, setFilter] = useState('');
   const users = useSelector((state) => state.users.users);
   const filteredUsers = useMemo(
@@ -38,6 +45,7 @@ const UserList = () => {
     const value = e.currentTarget.value;
     setFilter(value);
   };
+
   const tableColumns = [
     {
       title: 'User',
@@ -95,8 +103,21 @@ const UserList = () => {
       dataIndex: 'actions',
       render: (_, elm) => (
         <div className="text-right">
+          <Tooltip title="Edit">
+            <Button
+              target=""
+              type="primary"
+              className="mr-2"
+              icon={<EditOutlined />}
+              onClick={() => {
+                history.push(`edit-profile/${elm.id}`);
+              }}
+              size="small"
+            />
+          </Tooltip>
           <Tooltip title="View">
             <Button
+              target=""
               type="primary"
               className="mr-2"
               icon={<EyeOutlined />}

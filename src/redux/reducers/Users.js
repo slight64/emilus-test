@@ -1,13 +1,17 @@
 import {
-  LOAD_USERS_ERROR,
+  GET_USER,
   LOAD_USERS_PENDING,
+  SEND_USER_DATA,
+  SET_USER,
   SET_USERS,
+  USER_DATA_LOADED,
 } from '../constants/Users';
 
 const initState = {
   loading: false,
   users: [],
   message: '',
+  editingUser: null,
 };
 
 const users = (state = initState, action) => {
@@ -18,16 +22,31 @@ const users = (state = initState, action) => {
         loading: true,
         users: action.payload,
       };
+    case SET_USER:
+      return {
+        ...state,
+        loading: false,
+        editingUser: action.payload,
+      };
+    case GET_USER:
+      return {
+        ...state,
+        loading: true,
+      };
     case LOAD_USERS_PENDING:
       return {
         ...state,
         loading: true,
       };
-    case LOAD_USERS_ERROR:
+    case SEND_USER_DATA:
+      return {
+        ...state,
+        loading: true,
+      };
+    case USER_DATA_LOADED:
       return {
         ...state,
         loading: false,
-        message: 'Fail to load users',
       };
     default:
       return state;
