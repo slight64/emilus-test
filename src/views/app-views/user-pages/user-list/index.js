@@ -14,18 +14,25 @@ import { MOCK_AVATAR } from 'assets/data/constants';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import Utils from 'utils';
 import UserView from './UserView';
+import Loading from 'components/shared-components/Loading';
 
 const UserList = () => {
   const history = useHistory();
   const [filter, setFilter] = useState('');
-  const users = useSelector((state) => state.users.users);
+  const { users, loadingUsersList } = useSelector((state) => state.users);
+
   const filteredUsers = useMemo(
     () => Utils.wildCardSearch(users, filter),
     [users, filter]
   );
   const [userProfileVisible, setUserProfileVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUsersAction());
+  }, [dispatch]);
 
   const deleteUser = (userId) => {
     message.success({ content: `Deleted user ${userId}`, duration: 2 });
@@ -105,7 +112,6 @@ const UserList = () => {
         <div className="text-right">
           <Tooltip title="Edit">
             <Button
-              target=""
               type="primary"
               className="mr-2"
               icon={<EditOutlined />}
@@ -117,7 +123,6 @@ const UserList = () => {
           </Tooltip>
           <Tooltip title="View">
             <Button
-              target=""
               type="primary"
               className="mr-2"
               icon={<EyeOutlined />}
@@ -142,10 +147,6 @@ const UserList = () => {
     },
   ];
 
-  useEffect(() => {
-    dispatch(getUsersAction());
-  }, [dispatch]);
-
   return (
     <Card bodyStyle={{ padding: '20px' }}>
       <Flex alignItems="center" justifyContent="between" mobileFlex={false}>
@@ -157,7 +158,10 @@ const UserList = () => {
           />
         </div>
       </Flex>
-      <Table columns={tableColumns} dataSource={filteredUsers} rowKey="id" />
+      {loadingUsersList && <Loading />}
+      {users && (
+        <Table columns={tableColumns} dataSource={filteredUsers} rowKey="id" />
+      )}
       <UserView
         data={selectedUser}
         visible={userProfileVisible}

@@ -1,6 +1,8 @@
 import {
   GET_USER,
+  LOAD_USERS_ERROR,
   LOAD_USERS_PENDING,
+  LOAD_USER_ERROR,
   LOAD_USER_PENDING,
   SET_USER,
   SET_USERS,
@@ -50,5 +52,19 @@ export const loadUserAction = (payload) => {
 export const userDataLoaded = () => {
   return {
     type: USER_DATA_LOADED,
+  };
+};
+
+export const userDataLoadingError = (payload) => {
+  return {
+    type: LOAD_USERS_ERROR,
+    payload,
+  };
+};
+
+export const usersDataLoadingError = (payload) => {
+  return {
+    type: LOAD_USER_ERROR,
+    payload,
   };
 };

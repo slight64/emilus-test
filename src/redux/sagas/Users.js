@@ -3,6 +3,8 @@ import {
   setUserAction,
   setUsersAction,
   userDataLoaded,
+  userDataLoadingError,
+  usersDataLoadingError,
 } from 'redux/actions/Users';
 import {
   LOAD_USERS_PENDING,
@@ -13,41 +15,36 @@ import UsersService from 'services/UsersService';
 
 const delay = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
-export function* getUserFromDB(action) {
-  try {
-    const data = yield call(UsersService.fetchUserById, action.payload);
-    yield put(setUserAction(data));
-  } catch (err) {
-    console.log(err);
-    yield;
-  }
-}
-
-export function* getUsersFromDB() {
-  try {
-    const data = yield call(UsersService.fetchUsers);
-    yield put(setUsersAction(data));
-  } catch (err) {
-    console.log(err);
-    yield;
-  }
-}
-
 export function* onUsersPageOpen() {
   try {
-    yield takeEvery(LOAD_USERS_PENDING, getUsersFromDB);
+    yield takeEvery(LOAD_USERS_PENDING, function* () {
+      try {
+        const data = yield call(UsersService.fetchUsers);
+        yield put(setUsersAction(data));
+      } catch (err) {
+        console.log(err);
+        yield;
+      }
+    });
   } catch (err) {
-    console.log(err);
+    yield put(usersDataLoadingError(err));
     yield;
   }
 }
 
 export function* onEditUserPageOpen() {
   try {
-    yield takeEvery(LOAD_USER_PENDING, getUserFromDB);
+    yield takeEvery(LOAD_USER_PENDING, function* (action) {
+      try {
+        const data = yield call(UsersService.fetchUserById, action.payload);
+        yield put(setUserAction(data));
+      } catch (err) {
+        console.log(err);
+        yield;
+      }
+    });
   } catch (err) {
-    console.log(err);
-    yield;
+    yield put(userDataLoadingError(err));
   }
 }
 
@@ -56,11 +53,10 @@ export function* onUserDataSend() {
     yield takeEvery(SEND_USER_DATA, function* (action) {
       yield call(delay, 1000);
       yield put(userDataLoaded());
-      yield action.history.push('/app/pages/user-list');
+      yield action.history.push('/app/user-pages/user-list');
     });
   } catch (err) {
-    console.log(err);
-    yield;
+    yield put(userDataLoadingError(err));
   }
 }
 

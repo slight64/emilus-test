@@ -20,21 +20,21 @@ const dashBoardNavTree = [
 const extraNavTree = [
   {
     key: 'extra',
-    path: `${APP_PREFIX_PATH}/pages`,
+    path: `${APP_PREFIX_PATH}/user-pages`,
     title: 'sidenav.pages',
     icon: PlusCircleOutlined,
     breadcrumb: true,
     submenu: [
       {
         key: 'extra-pages',
-        path: `${APP_PREFIX_PATH}/pages`,
+        path: `${APP_PREFIX_PATH}/user-pages`,
         title: 'sidenav.pages',
         icon: FileTextOutlined,
         breadcrumb: true,
         submenu: [
           {
             key: 'extra-pages-list',
-            path: `${APP_PREFIX_PATH}/pages/user-list`,
+            path: `${APP_PREFIX_PATH}/user-pages/user-list`,
             title: 'sidenav.pages.userlist',
             icon: '',
             breadcrumb: true,
@@ -43,6 +43,14 @@ const extraNavTree = [
         ],
       },
     ],
+  },
+  {
+    key: 'planner',
+    path: `${APP_PREFIX_PATH}/planner`,
+    title: 'planner',
+    icon: FileTextOutlined,
+    breadcrumb: false,
+    submenu: [],
   },
 ];
 const navigationConfig = [...dashBoardNavTree, ...extraNavTree];
