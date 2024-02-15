@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Avatar, Button, Input, Row, Col, message, Upload } from 'antd';
+import { Form, Avatar, Button, Input, Row, Col, Upload } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { ROW_GUTTER } from 'constants/ThemeConstant';
 import Flex from 'components/shared-components/Flex';
