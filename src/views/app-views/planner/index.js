@@ -4,14 +4,15 @@ import { useDraggable } from '@dnd-kit/core';
 import './planner.css';
 import Furniture from './furniture/Furniture';
 import { CSS } from '@dnd-kit/utilities';
+import { indexOf, replace } from 'lodash';
+
+const initialCeils = Array(400).fill(null);
 
 function Planner() {
   const [itemsCount, setItemsCount] = useState([]);
-  const [itemDraggable, setItemDraggable] = useState(false);
-  const toolsList = ['chair', 'table'];
-  const ceils = Array(400).fill('');
-
-  const [parent, setParent] = useState(null);
+  const [toolsList, setЕoolsList] = useState(['chair', 'table', 'big-table']);
+  const [ceils, setCeils] = useState(initialCeils);
+  const [boardItems, setBoardItems] = useState([]);
 
   const addItemToBoard = (e) => {
     const newItem = e.active.data.current?.title;
@@ -21,30 +22,75 @@ function Planner() {
     setItemsCount(temp);
   };
 
-  const item = toolsList.map((el, i) => {
+  const items = toolsList.map((el, i) => {
     return (
-      <Draggable id={i} key={i}>
-        <Furniture type={el} />
+      <Draggable id={el} key={el}>
+        <Furniture type={el}></Furniture>
       </Draggable>
     );
   });
 
-  function handleDragEnd(event) {
-    const { over } = event;
-    setParent(over ? over.id : null);
+  const item = (id, type) => {
+    return (
+      <Draggable id={id} key={id}>
+        <Furniture type={type}></Furniture>
+      </Draggable>
+    );
+  };
+  function handleDragEnd(e) {
+    const { over } = e;
+    console.log(e);
+    if (over && over.id.includes('board')) {
+      console.log(toolsList[toolsList.indexOf(e.active.id)]);
+      setCeils(
+        ceils.map((el, i) => {
+          let itemtype = e.active.id;
+          console.log('itemtype', itemtype);
+
+          if (over.id === 'board' + i) {
+            console.log(itemtype);
+            itemtype = itemtype.replaceAll(/\d/gi, '');
+            return item(itemtype + i, itemtype);
+          }
+          if (el && el.key === itemtype) {
+            return null;
+          }
+          return el;
+        })
+      );
+      console.log(ceils);
+    }
+    if (!over) {
+      setCeils(
+        ceils.map((el, i) => {
+          if (el && el.key === e.active.id) {
+            const temp = boardItems.filter((item) => el.key === item.key);
+            setBoardItems(temp);
+            return null;
+          }
+
+          return el;
+        })
+      );
+      console.log('NOT OVER');
+    }
   }
+  const handleDragStart = (event) => {
+    console.log(event);
+  };
+
   return (
     <div className="planner">
-      <DndContext onDragEnd={addItemToBoard}>
+      <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         <div className="planner-wrapper">
           <div className="planner-toolbar">
-            <div className="toolbar">{item}</div>
+            <div className="toolbar">{items}</div>
           </div>
           <div className="planner-board">
             <div className="board">
-              {ceils.map((_, i) => (
-                <Droppable key={i} id={'board'}>
-                  {parent === i ? item : ''}
+              {ceils.map((el, i) => (
+                <Droppable key={'board' + i} id={'board' + i}>
+                  {el}
                 </Droppable>
               ))}
             </div>
@@ -59,7 +105,7 @@ export function Droppable(props) {
   const { setNodeRef } = useDroppable({
     id: props.id,
   });
-
+  const [item, setITem] = useState([]);
   return (
     <div ref={setNodeRef} className="ceil">
       {props.children}
@@ -70,6 +116,8 @@ export function Droppable(props) {
 export function Draggable(props) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: props.id,
+    data: { children: props.children },
+    type: props.type,
   });
   const style = {
     transform: CSS.Translate.toString(transform),

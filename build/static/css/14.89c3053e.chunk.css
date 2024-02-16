@@ -1,0 +1,2 @@
+.planner-wrapper{display:flex;justify-content:space-between;padding:20px;background-color:#fff}.toolbar{padding:10px;width:400px;height:200px;border-radius:15px}.board,.toolbar{background-color:grey}.board{display:grid;width:600px;grid-template-columns:repeat(20,30px);grid-template-rows:repeat(20,30px)}.ceil{border:1px solid #000}.item{width:30px;height:30px;background-color:#fff;border-radius:5px}
+/*# sourceMappingURL=14.89c3053e.chunk.css.map */

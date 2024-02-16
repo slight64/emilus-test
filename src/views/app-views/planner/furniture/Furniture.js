@@ -1,26 +1,34 @@
 import React from 'react';
+import chair from '../assets/chair.svg';
+import table from '../assets/table.svg';
 
 const Furniture = ({ type, handleClick }) => {
   let style = {};
+  let svg = '';
   switch (type) {
     case 'chair':
-      console.log(1);
       style = {
-        backgroundColor: '#d1d8dd',
-        width: '30px',
-        height: '30px',
+        width: '25px',
+        height: '25px',
       };
+      svg = chair;
       break;
     case 'table':
       style = {
-        backgroundColor: '#dfffff',
         width: '30px',
         height: '30px',
       };
+      svg = table;
+      break;
+    case 'big-table':
+      style = {
+        width: '30px',
+        height: '60px',
+      };
+      svg = table;
       break;
     default:
       style = {
-        backgroundColor: '#ddd',
         width: '30px',
         height: '30px',
       };
@@ -29,7 +37,7 @@ const Furniture = ({ type, handleClick }) => {
 
   return (
     <div onClick={handleClick} style={style}>
-      {type}
+      <img src={svg} />
     </div>
   );
 };

@@ -22,13 +22,11 @@ export function* onUsersPageOpen() {
         const data = yield call(UsersService.fetchUsers);
         yield put(setUsersAction(data));
       } catch (err) {
-        console.log(err);
-        yield;
+        yield put(usersDataLoadingError(err));
       }
     });
   } catch (err) {
     yield put(usersDataLoadingError(err));
-    yield;
   }
 }
 
@@ -39,8 +37,7 @@ export function* onEditUserPageOpen() {
         const data = yield call(UsersService.fetchUserById, action.payload);
         yield put(setUserAction(data));
       } catch (err) {
-        console.log(err);
-        yield;
+        yield put(userDataLoadingError(err));
       }
     });
   } catch (err) {
